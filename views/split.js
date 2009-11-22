@@ -52,6 +52,7 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 		var ind, max, min, maxPos, minPos, ret;
 		var len = views.get('length')
 		var dividerSpacing = this.get('dividerSpacing')
+		var dividers = 0
 		var immediateViews = this._subViewsForDividerAtIndex(index)
 		var leftView = immediateViews[0]
 		var rightView = immediateViews[1]
@@ -65,10 +66,12 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 			max[arr] += this.maxThicknessForView(views.objectAt(ind)) || 9999
 		}
 		
-		maxPos = Math.min(thickness - min[2], this.positionForView(leftView) + max[1])
-		maxPos -= (len - index - 1) * dividerSpacing
-		minPos = Math.max(min[0] + min[1], (this.positionForView(rightView) + this.thicknessForView(rightView)) - (this.maxThicknessForView(rightView) || 9999))
-		minPos += (index * dividerSpacing)
+		dividers = (len - index - 1) * dividerSpacing
+		maxPos = Math.min(thickness - min[2] - dividers, this.positionForView(leftView) + max[1])
+
+		dividers = (index * dividerSpacing)
+		minPos = Math.max(min[0] + min[1] + dividers, (this.positionForView(rightView) + this.thicknessForView(rightView)) - (this.maxThicknessForView(rightView) || 9999))
+
 		return {start: minPos, length: maxPos - minPos}
 	},
 	
@@ -163,6 +166,7 @@ SC.SplitView = Endash.SplitView.extend({
 		var bottomRightView = this.get('bottomRightView')
 		
 		this.set('childViews', [topLeftView, bottomRightView])
+		this.set('dividerSpacing', this.get('dividerThickness'))
 		
 		sc_super()
 	}

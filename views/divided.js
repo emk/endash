@@ -168,7 +168,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 	thumb_thumbViewDidBeginDrag: function(thumbView, evt) {
 		var direction = this.get('layoutDirection')
 		var dragRange = this._dragRangeForDivider(thumbView)
-		var offset = SC.viewportOffset(this.get('layer'))
+		var viewOffset = SC.viewportOffset(this.get('layer'))
 		var thumbOffset = SC.viewportOffset(thumbView.get('layer'))
 
 		var dividerThickness = this.get('dividerThickness')
@@ -176,14 +176,13 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 
 		if(direction == SC.LAYOUT_HORIZONTAL) {
 			thumbOffset = evt.pageX - thumbOffset.x
-			offset = offset.x
+			viewOffset = viewOffset.x
  		} else {
 			thumbOffset = evt.pageY - thumbOffset.y
-			offset = offset.y
+			viewOffset = viewOffset.y
 		}
 		
-		dragRange.start += offset + thumbOffset - (dividerThickness - dividerOffset)
-		dragRange.length -= this.thicknessForView(thumbView) - thumbOffset - 1
+		dragRange.start += viewOffset + thumbOffset
 		
 		this._dragRange = dragRange
 		this._lastInside = YES
