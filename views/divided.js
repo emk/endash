@@ -56,11 +56,8 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		
 		for(index = 0; index < numberOfSubViews; index++) {
 			last = !(index < numberOfSubViews - 1)
-			view = this.viewForPaneAtIndex(index)
-			thickness = ((direction == SC.LAYOUT_HORIZONTAL) ? view.prototype.layout.width : view.prototype.layout.height) || 200
-			view = this.createChildView(view)
-			
-			
+
+			view = this.createChildView(this.viewForPaneAtIndex(index))
 			subViews.push(view)
 			childViews.push(view) ;
 			
@@ -339,6 +336,5 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 
 		return thickness
 	},
-	
 	
 });
