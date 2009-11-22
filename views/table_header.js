@@ -29,7 +29,6 @@ Endash.TableHeaderView = Endash.TableRowView.extend(
 
 			var view = this.createChildView(SC.LabelView.extend({
 				valueBinding: '.parentView*column.value'
-				// value: "test"
 			}))
 
 			childViews.push(view)
@@ -52,6 +51,6 @@ Endash.TableHeaderView = Endash.TableRowView.extend(
 		var func = this.thicknessesRangeObserver
 		var is = SC.IndexSet.create(0, thicknesses.get('length')).freeze();
 		var observer = thicknesses.addRangeObserver(is, this, func, null);      
-		this._cv_thicknessesRangeObserver = observer ;
+		this._th_thicknessesRangeObserver = observer ;
 	}.observes('columns')
 })

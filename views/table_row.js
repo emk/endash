@@ -121,7 +121,7 @@ Endash.TableRowView = Endash.DividedView.extend(
 		var func = this.columnsRangeObserver
 		var is = SC.IndexSet.create(0, columns.get('length')).freeze();
 		var observer = columns.addRangeObserver(is, this, func, null);      
-		this._cv_columnsRangeObserver = observer ;
+		this._tr_columnsRangeObserver = observer ;
 
 		var f = this.columnsPropertyDidChange
 
