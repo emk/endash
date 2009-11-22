@@ -17,6 +17,10 @@ views/split.js
 	and to adjust the sizes of its panes as needed to keep
 	the SplitView optimally laid out.
 	
+	Includes a wrapper around Endash.SplitView that
+	overrides SC.SplitView and translates its configuration
+	as needed. Preliminary.
+	
 views/thumb.js
 	A simple view which notifies its delegate of mouse
 	events. Subclassed by DividedView to use as the dividers
