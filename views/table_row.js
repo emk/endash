@@ -121,40 +121,19 @@ Endash.TableRowView = Endash.DividedView.extend(
 		var func = this.columnsRangeObserver
 		var is = SC.IndexSet.create(0, columns.get('length')).freeze();
 		var observer = columns.addRangeObserver(is, this, func, null);      
-    this._cv_columnsRangeObserver = observer ;
+		this._cv_columnsRangeObserver = observer ;
 
 		var f = this.columnsPropertyDidChange
 
 		this._columns = columns; 
-    if (columns) {
-      if (SC.isArray(columns)) {
-        columns.invoke('addObserver', '*', this, f) ;
-      } else if (columns.addObserver) {
-        columns.addObserver('*', this, f) ;
-      }
-    }
-
-    this.columnsRangeObserver(columns, null, '[]', null);
-	}.observes('columns'),
-	
-	
-	viewNeedsToUpdate: function(target, key, value, propertyRevision) {
-		// if(!this.get('isVisibleInWindow'))
-			// return
-
-		var content = this.get('content')
-		if(content) {
-		 // && content.propertyRevision > (this._lastPropertyRevision || 0)) {
-			this.redraw()
-			this._lastPropertyRevision = propertyRevision
+		if (columns) {
+			if (SC.isArray(columns)) {
+				columns.invoke('addObserver', '*', this, f) ;
+			} else if (columns.addObserver) {
+				columns.addObserver('*', this, f) ;
+			}
 		}
-	}.observes('content', 'isVisibleInWindow'),
-	
-	redraw: function() {
-		var columns = this.get('columns')
-		var content = this.get('content')
-		var subViews = this.get('subViews')
-		for(var i = 0, len = columns.get('length'); i < len; i++)
-			subViews.objectAt(i).set('value', content.get(columns.objectAt(i).get('contentKey')))
-	}
+
+		this.columnsRangeObserver(columns, null, '[]', null);
+	}.observes('columns')
 })
