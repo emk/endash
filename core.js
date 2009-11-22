@@ -16,6 +16,8 @@ Endash = SC.Object.create(
   NAMESPACE: 'Endash',
   VERSION: '0.1.0',
 
+	test: false
+
   // TODO: Add global constants or singleton objects needed by your app here.
 
 }) ;

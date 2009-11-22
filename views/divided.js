@@ -22,7 +22,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 	/** @private */
 	thicknessesBindingDefault: SC.Binding.multiple(),
 
-	dividers: YES,
+	showDividers: YES,
 	dividerSpacing: 6,
 	dividerThickness: 6,
 	dividerView: Endash.ThumbView,
@@ -42,7 +42,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		var numberOfSubViews = (childCount && childCount > 1) ? childCount : ((numberOfViews > 2) ? numberOfViews : 2) ;
 
 		var direction = this.get('layoutDirection')
-		var dividers = this.get('dividers') || YES
+		var showDividers = this.get('showDividers')
 
 		var childViews = [] ;
 		var subViews = []
@@ -61,7 +61,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 			subViews.push(view)
 			childViews.push(view) ;
 
-			if(!last && dividers) {
+			if(!last && showDividers) {
 				view = this.createChildView(dividerView.extend({
 					delegate: this
 				}))
@@ -79,7 +79,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 	viewForPaneAtIndex: function(index) {
 		var views = this.get('childViews') ;
  		if(views.get('length') == 0)
-			views = [SC.View] ;
+			views = []
 
 		var view = views[index] || this.get('defaultView')
 
@@ -92,6 +92,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 	},
 
 	updateChildLayout: function() {
+
 		var thicknesses = this.get('thicknesses')
 
 		if(!this.get('isVisibleInWindow') || SC.none(thicknesses))
@@ -110,7 +111,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		var dividerOffset = (dividerThickness - dividerSpacing) / 2
 
 		this.set('dividerOffset', dividerOffset)
-		var dividers = this.get('dividers')
+		var showDividers = this.get('showDividers')
 
 		var frame = this.get('frame')
 
@@ -129,8 +130,8 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 			last = (dividerOffset == 0) ? (index == numberOfChildViews - 1) : (subViews.slice(-1)[0] == view)
 			offset = 0
 
-			if(!dividers || index % 2 == 0) {
-				thickness = thicknesses.objectAt(dividers ? (index / 2) : index)
+			if(!showDividers || index % 2 == 0) {
+				thickness = thicknesses.objectAt(showDividers ? (index / 2) : index)
 				delta = thickness
 			} else {
 				thickness = dividerThickness
@@ -277,10 +278,11 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 	},
 
 	thickness: function(key, value) {
-		if(SC.none(value))
-			return this.thicknessForView(this)
+		if(value !== undefined)
+			this._thickness = value
 
-		sc_super()
+		var thickness = this._thickness
+		return thickness ? thickness : this.thicknessForView(this)
 	}.property(),
 
 
