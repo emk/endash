@@ -115,33 +115,34 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 		if(sum != thickness - dividerThicknesses) {
 			isSet = thicknesses.map(function() { return false })
 			multiplier = ((thickness - dividerThicknesses) / sum)
-			// console.log(thickness + " " + sum + " " + multiplier)
+			var test = 10
 			do {
+						test--
 				for(var i = 0, adjustedSum = 0; i < len; i++) {
 					if(isSet.objectAt(i)) {
 						adjustedSum += thicknesses.objectAt(i)
-						continue
-					}
-						
-					newThickness = Math.round(thicknesses.objectAt(i) * multiplier)
-					overflowThickness = Math.round(overflow / unSet)
-					
-					adjustedSum += (adjustedThickness = (views.objectAt(i).get('autoresize') === NO) ? thicknesses.objectAt(i) : this._setThickness_forView_atIndex(newThickness + overflowThickness, views.objectAt(i), i))
-					
-					if(newThickness == adjustedThickness) {
-						overflow -= overflowThickness
 					} else {
-						overflow += newThickness - adjustedThickness
-						isSet.replace(i, 1, true)
-						--unSet
+						
+						newThickness = Math.round(thicknesses.objectAt(i) * multiplier)
+						overflowThickness = overflow / unSet
+						overflowThickness = overflow < 0 ? Math.floor(overflowThickness) : Math.ceil(overflowThickness)
+						adjustedSum += (adjustedThickness = (views.objectAt(i).get('autoresize') === NO) ? thicknesses.objectAt(i) : this._setThickness_forView_atIndex(newThickness + overflowThickness, views.objectAt(i), i))
+					
+						if(newThickness == adjustedThickness) {
+							overflow -= overflowThickness
+						} else {
+							overflow += newThickness - adjustedThickness
+							isSet.replace(i, 1, true)
+							--unSet
+						}
 					}
 				}
 
 				multiplier = 1
 				if(overflow == 0 && adjustedSum != (thickness - dividerThicknesses))
-					overflow = thickness - dividerThicknesses - adjustedSum
-					
-			} while(overflow != 0 && unSet > 0)
+					overflow = adjustedSum - dividerThicknesses - thickness
+
+			} while(overflow != 0 && unSet > 0 && test > 0)
 		}		
 		
 		this._sum = this._thickness = thickness
