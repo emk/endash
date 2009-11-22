@@ -1,0 +1,7 @@
+.sc-split-view {
+	background-color: white;
+}
+
+.sc-split-view > div.sc-split-divider-view {
+	z-index: 1000;
+}
