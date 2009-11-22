@@ -1,0 +1,29 @@
+SproutCore Framework (Endash extensions)
+
+This is a framework for containing preliminary code developed by
+Endash (Christopher Swasey) for the Sproutcore framework.
+
+Current contains the following:
+
+views/divided.js
+	A base class implementing a view divided into an
+	arbitrary number of panes, with optional divider
+	views to resize the panes.
+	
+views/split.js
+	An extension to DividedView implementing some
+	additional functionality, particularly by overriding
+	certain methods to keep the SplitView a constant size
+	and to adjust the sizes of its panes as needed to keep
+	the SplitView optimally laid out.
+	
+views/thumb.js
+	A simple view which notifies its delegate of mouse
+	events. Subclassed by DividedView to use as the dividers
+	
+mixins/thumb_delegate.js
+	Delegate for ThumbView. Mixed into DividedView.
+
+mixins/split_view_delegate.js
+	Delegate for SplitView. Mixed into SplitView.
+	
