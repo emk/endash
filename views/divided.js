@@ -240,7 +240,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		return (direction == SC.LAYOUT_HORIZONTAL) ? frame.x : frame.y
 	},
 
-	thicknessForView: function(view, position) {
+	thicknessForView: function(view) {
 		var direction = this.get('layoutDirection')
 		var frame = view.get('frame')
 
@@ -250,7 +250,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		return frame.height
 	},
 
-	minThicknessForView: function(view, position) {
+	minThicknessForView: function(view) {
 		var direction = this.get('layoutDirection')
 		var layout = view.get('layout')
 		var ret
@@ -266,7 +266,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		return this.get('minimumThickness') || 5
 	},
 
-	maxThicknessForView: function(view, position) {
+	maxThicknessForView: function(view) {
 		var direction = this.get('layoutDirection')
 		var layout = view.get('layout')
 
@@ -324,11 +324,11 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		return ret
 	},
 
-	_setThickness_forView_atIndex: function(thickness, view, index, position) {
+	_setThickness_forView_atIndex: function(thickness, view, index) {
 		var thicknesses = this.get('thicknesses')
 		var view = this.get('subViews')[index]
-		var max = this.maxThicknessForView(view, position) || 9999
-		var min = this.minThicknessForView(view, position) || 0
+		var max = this.maxThicknessForView(view) || 9999
+		var min = this.minThicknessForView(view) || 0
 		var thickness = Math.min(max, Math.max(min, thickness))
 
 		if(thickness != thicknesses.objectAt(index))
