@@ -1,0 +1,3 @@
+Endash.ThumbDelegate = {
+	isThumbDelegate: YES
+}
