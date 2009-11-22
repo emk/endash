@@ -22,12 +22,7 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 	dividerSpacing: 7,
 	
 	dividerThickness: 7,
-	
-	splitViewDelegate: function() {
-		var del = this.get('delegate')
-		return this.delegateFor('isSplitViewDelegate', del);  
-	}.property('delegate').cacheable(),
-	
+
 	adjustThicknessesForDividerAtIndex_byOffset: function(index, offset) {
 		var ind = index;
 		var diff = offset * -1
@@ -149,10 +144,9 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 	}.observes('thicknesses', 'frame', 'isVisibleInWindow'),
 	
 	_dragRangeForDivider: function(thumbView) {
-		var del = this.get('splitViewDelegate') ;
 		var index = this.get('dividers').indexOf(thumbView) ;
-		var max = del.splitView_constrainMaxCoordinateofDividerAtIndex(this, index) ;
-		var min = del.splitView_constrainMinCoordinateofDividerAtIndex(this, index) ;
+  	var max = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMaxCoordinateofDividerAtIndex', this, index)
+  	var min = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMinCoordinateofDividerAtIndex', this, index)
 		return {start: min, length: (max - min)}
 	},
 

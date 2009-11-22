@@ -30,12 +30,7 @@ Endash.ThumbView = SC.View.extend(
   isEnabled: YES,
   isEnabledBindingDefault: SC.Binding.bool(),
   
-	delegate: null,
-	
-	eventDelegate: function() {
-		var del = this.get('delegate')
-		return this.delegateFor('isThumbDelegate', del);  
-	}.property('delegate').cacheable(),
+	delegate: null,	
   
   mouseDown: function(evt) {
     if (!this.get('isEnabled')) return NO ;
@@ -43,13 +38,9 @@ Endash.ThumbView = SC.View.extend(
 		var responder = this.getPath('pane.rootResponder') ;
     if (!responder) return NO ;
     
-		var del = this.get('eventDelegate')
-		if (!del) return NO ;
-
-		this._del = del
 		this._offset = {x: 0, y: 0}
 		
-		del.thumb_thumbViewDidBeginDrag(this, evt)
+  	this.invokeDelegateMethod(this.delegate, 'thumb_thumbViewDidBeginDrag', this, evt)
     responder.dragDidStart(this) ;
     
     this._mouseDownX = this._lastX = evt.pageX ;
@@ -67,15 +58,13 @@ Endash.ThumbView = SC.View.extend(
 		this._lastX = evt.pageX
 		this._lastY = evt.pageY
 		
-		var del = this.get('eventDelegate')
-		del.thumb_thumbViewWasDragged_withOffset(this, offset, evt)				
+		this.invokeDelegateMethod(this.delegate, 'thumb_thumbViewWasDragged_withOffset', this, offset, evt)
     return YES;
   },
 
 	mouseUp: function(evt) {
-		this._del = this._lastX = this._lastY = this._offset = this._mouseDownX = this.mouseDownY = null
-		var del = this.get('eventDelegate')
-		del.thumb_thumbViewDidEndDrag(this, evt)
+		this._lastX = this._lastY = this._offset = this._mouseDownX = this.mouseDownY = null
+  	this.invokeDelegateMethod(this.delegate, 'thumb_thumbViewDidEndDrag', this, evt)
 	},
     
   // doubleClick: function(evt) {
