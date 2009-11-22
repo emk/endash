@@ -1,5 +1,5 @@
 // ==========================================================================
-// Project:   Endash.SplitView
+// Project:	 Endash.SplitView
 // Copyright: ©2009 My Company, Inc.
 // ==========================================================================
 /*globals Endash */
@@ -9,14 +9,14 @@ sc_require('mixins/split_view_delegate');
 sc_require('mixins/thumb_delegate');
 
 /**
-  @class
-  
+	@class
+	
 */
 Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 /** @scope Endash.SplitView.prototype */ {
 	
 	dividerView: Endash.ThumbView.extend({
-	  classNames: ['sc-split-divider-view']
+		classNames: ['sc-split-divider-view']
 	}),
 	
 	dividerSpacing: 7,
@@ -145,8 +145,8 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 	
 	_dragRangeForDivider: function(thumbView) {
 		var index = this.get('dividers').indexOf(thumbView) ;
-  	var max = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMaxCoordinateofDividerAtIndex', this, index)
-  	var min = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMinCoordinateofDividerAtIndex', this, index)
+		var max = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMaxCoordinateofDividerAtIndex', this, index)
+		var min = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMinCoordinateofDividerAtIndex', this, index)
 		return {start: min, length: (max - min)}
 	},
 
