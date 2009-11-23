@@ -91,12 +91,17 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 		return view
 	},
 
-	updateChildLayout: function() {
-
+	updateChildLayout: function(object, key, value, rev) {
 		var thicknesses = this.get('thicknesses')
-
-		if(!this.get('isVisibleInWindow') || SC.none(thicknesses))
+// console.log(this)
+// console.log(key)
+// console.log(this.laidOut)
+		if(this.laidOut || SC.none(thicknesses) || !this.get('isVisibleInWindow') || SC.none(thicknesses) || thicknesses.get('length') == 0 || this.laidOut)
 			return
+
+		this.laidOut = YES
+
+		// console.log("updating")
 
 		var childViews = this.get('childViews')
 		var numberOfChildViews = childViews.get('length')
@@ -156,7 +161,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate,
 
 			this.updateLayout_forView(layout, view)
 		}
-	}.observes('thicknesses', 'isVisibleInWindow'),
+	}.observes('isVisibleInWindow', 'thicknesses'),
 
 	updateLayout_forView: function(layout, view) {
 		view.adjust(layout)
