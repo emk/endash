@@ -21,6 +21,35 @@ views/split.js
 	overrides SC.SplitView and translates its configuration
 	as needed. Preliminary.
 	
+	showDividers: YES | NO
+		what it says on the tin
+		
+	dividerSpacing: integer
+		The space the view should allot for each divider
+
+	dividerThickness: integer
+		The actual size of each divider
+		
+	dividerView: view
+		Endash.ThumbView by default
+		
+	childView:autoresize: YES | NO
+	
+	Example:
+	
+	split: Endash.SplitView.design({
+		childViews: [
+			SC.View.extend({layout: {
+				minWidth: 200, 
+				maxWidth: 300
+			}}), 
+			SC.View.extend({layout: {
+				width: 245
+			}, autoresize: NO}),
+			SC.View
+		]
+	})
+	
 views/thumb.js
 	A simple view which notifies its delegate of mouse
 	events. Subclassed by DividedView to use as the dividers
