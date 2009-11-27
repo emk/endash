@@ -15,11 +15,11 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 
 	classNames: ['sc-divided-view'],
 
-  /**
-    Direction of layout.  Must be SC.LAYOUT_HORIZONTAL or SC.LAYOUT_VERTICAL.
-    
-    @property {String}
-  */
+	/**
+		Direction of layout.	Must be SC.LAYOUT_HORIZONTAL or SC.LAYOUT_VERTICAL.
+		
+		@property {String}
+	*/
 	layoutDirection: SC.LAYOUT_HORIZONTAL,
 
 	thicknesses: null,
@@ -27,25 +27,25 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 	/** @private */
 	thicknessesBindingDefault: SC.Binding.multiple(),
 
-  /**
-    Set to NO to disable rendering of divider views
-    
-    @property {Boolean}
-  */
+	/**
+		Set to NO to disable rendering of divider views
+		
+		@property {Boolean}
+	*/
 	showDividers: YES,
 	
 	/**
-    Amount of space the divider takes up between views.
-    
-    @property {Integer}
-  */
+		Amount of space the divider takes up between views.
+		
+		@property {Integer}
+	*/
 	dividerSpacing: 6,
 	
 	/**
-    Size of the divider view (can be greater than dividerSpacing)
-    
-    @property {Integer}
-  */
+		Size of the divider view (can be greater than dividerSpacing)
+		
+		@property {Integer}
+	*/
 	dividerThickness: 6,
 	
 	// default views
@@ -113,18 +113,6 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		if(defaultThickness !== undefined)
 			return defaultThickness
 			
-		// var direction = this.get('layoutDirection')
-		// var layout = view.prototype.layout
-		// var ret
-		// 
-		// if(direction == SC.LAYOUT_HORIZONTAL)
-		// 	ret = layout.minWidth
-		// else
-		// 	ret = layout.minHeight
-		// 
-		// if(ret)
-		// 	return ret
-
 		return null
 	},
 	
@@ -204,12 +192,12 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		}
 	},
 
-  /**
-    Returns the view for a given index (excludes divider views).
-    
-    @param {Integer} index the index to lookup.
-    @returns {SC.View}
-  */
+	/**
+		Returns the view for a given index (excludes divider views).
+		
+		@param {Integer} index the index to lookup.
+		@returns {SC.View}
+	*/
 	_viewForPaneAtIndex: function(index) {
 		var views = this.get('childViews') ;
  		if(views.get('length') == 0)
@@ -226,8 +214,8 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 	},
 	
 	/**
-    Updates the child views
-  */
+		Updates the child views
+	*/
 	updateChildLayout: function(object, key, value, rev) {
 		var thicknesses = this.get('thicknesses')
 
@@ -296,20 +284,20 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 	}.observes('isVisibleInWindow'),
 
 	/**
-    Does the actual modification of the child view's layout
-  */
+		Does the actual modification of the child view's layout
+	*/
 	_updateLayout_forView: function(layout, view) {
 		view.adjust(layout)
 	},
 
 	/**
-    Delegate method for the dividerView.
+		Delegate method for the dividerView.
 
 		Caches the allowed drag range for the divider.
 		
 		@params {SC.View} thumbView the divider
 		@params {Event} evt the click event
-  */
+	*/
 	thumbViewDidBeginDrag: function(thumbView, evt) {
 		var direction = this.get('layoutDirection')
 		var index = this.get('dividers').indexOf(thumbView)
@@ -338,7 +326,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 	},
 
 	/**
-    Delegate method for the dividerView.
+		Delegate method for the dividerView.
 
 		Handles the actual drag of the divider view by adjusting the drag
 		offset as needed and then passing that value to 
@@ -347,7 +335,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		@params {SC.View} thumbView the divider
 		@params {Array} offset a pair of offset coordinates
 		@params {Event} evt the click event
-  */
+	*/
 	thumbViewWasDragged_withOffset: function(thumbView, offset, evt) {
 		var direction = this.get('layoutDirection')
 		var dividers = this.get('dividers')
@@ -382,13 +370,13 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 	},
 
 	/**
-    Delegate method for the dividerView. 
+		Delegate method for the dividerView. 
 
 		Resets some cached properties.
 
 		@params {SC.View} thumbView the divider
 		@params {Event} evt the click event
-  */
+	*/
 	thumbViewDidEndDrag: function(thumbView, evt) {
 		this._dragRange = this._lastInside = this._collapseRange = null
 	},
@@ -399,7 +387,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 
 		@params {Integer} index index of the divider view
 		@returns {Range}
-  */
+	*/
 	dragRangeForDividerAtIndex: function(index) {
 		var views = this.get('subViews')
 		var view = views[index]
@@ -420,7 +408,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		
 		@params {Integer} index index of the divider view
 		@params {Integer} offset value to change the thicknesses by
-  */
+	*/
 	adjustThicknessesForDividerAtIndex_byOffset: function(index, offset) {
 		var views = this.get('subViews')
 		var view = views[index]
@@ -434,7 +422,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		@params {Integer} index index of the view to resize
 		@params {Integer} offset value to change the thicknesses by
 		@returns {Integer} the difference between the specified thickness and final thickness
-  */
+	*/
 	adjustThicknessForView_atIndex_byOffset: function(view, index, offset) {
 		var thicknesses = this.get('thicknesses')
 		var thickness = thicknesses.objectAt(index) + offset
@@ -557,7 +545,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		@params {Integer} point the current point
 		@params {Integer} offset the difference between the current and previous points
 		@returns {Integer} the adjusted offset
-  */
+	*/
 	_adjustedOffsetForDrag: function(inside, lastInside, dragRange, point, offset) {
 		var ret = 0
 		if(inside)
@@ -588,7 +576,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		@params {SC.View} view view to resize
 		@params {Integer} index index of the view to resize
 		@returns {Integer} the actual value set
-  */
+	*/
 	_setThickness_forView_atIndex: function(thickness, view, index) {
 		var thicknesses = this.get('thicknesses')
 		var view = this.get('subViews')[index]
