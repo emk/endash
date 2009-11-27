@@ -12,9 +12,9 @@ module("Endash.SplitView",{
 		pane = SC.MainPane.create({
 			childViews: [ 
 				Endash.SplitView.design({layout: {width: 614}, childViews: [
-					SC.View.extend({layout: {width: 300, minWidth: 100}}),
+					SC.View.extend({layout: {width: 300, minWidth: 100}, isCollapsable: YES}),
 					SC.View.extend({layout: {maxWidth: 300}, autoresize: NO}),
-					SC.View.extend({layout: {minWidth: 100}})
+					SC.View.extend({layout: {minWidth: 100}, isCollapsable: YES})
 				]})
 			]
 		});
@@ -40,6 +40,21 @@ test("Calculates the correct drag range", function() {
 	equals(343, dragRange1.length)
 	equals(107, dragRange2.start)
 	equals(350, dragRange2.length)
+});
+
+test("iscollapsable", function() {
+	var views = view.get('subViews')
+	equals(YES, view.canCollapseView(views[0]))
+	equals(NO, view.canCollapseView(views[1]))
+	equals(YES, view.canCollapseView(views[2]))
+})
+
+test("Calculates the correct collapseRange", function() {
+	dragRange1 = view.invokeDelegateMethod(view.delegate, 'dividedViewCollapseRangeForDividerAtIndex', view, 0)
+	dragRange2 = view.invokeDelegateMethod(view.delegate, 'dividedViewCollapseRangeForDividerAtIndex', view, 1)
+
+	equals(10, dragRange1.start)
+	equals(1604, dragRange2.length)
 });
 
 test("Resizes properly and respects autoresize", function() {

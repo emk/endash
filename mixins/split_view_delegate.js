@@ -10,20 +10,18 @@ Endash.SplitViewDelegate = {
 		return SC.minRange(splitView.dragRangeForDividerAtIndex(index))
 	},
 	
-	dividedViewCollapseRangeForDividerAtIndex: function(dividedView, index, dragRange) {
+	dividedViewCollapseRangeForDividerAtIndex: function(dividedView, index) {
 		var views = dividedView._subViewsForDividerAtIndex(index)
 		var minThickness;
 		
 		var start, end;
 		
 		if(dividedView.canCollapseView(views[0])) {
-			// minThickness = dividedView.minThicknessForView(views[0])
 			start = dividedView.positionForView(views[0]) + 10
 		} else
 			start = -1000
 		
 		if(dividedView.canCollapseView(views[1])) {
-			// minThickness = dividedView.minThicknessForView(views[1])
 			end = dividedView.positionForView(views[1]) + (views[1].get('isCollapsed') ? 0 : dividedView.thicknessForView(views[1])) - 10
 		} else
 			end = 9999

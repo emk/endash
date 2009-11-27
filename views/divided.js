@@ -452,6 +452,10 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		var frame = view.get('frame')
 		return (direction == SC.LAYOUT_HORIZONTAL) ? frame.x : frame.y
 	},
+	
+	thickness: function(key, value) {
+		return this.thicknessForView(this)
+	}.property('frame').cacheable(),
 
 	/**
 		Returns either the width or geight for a given view
@@ -506,13 +510,6 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 
 		return layout.maxHeight
 	},
-
-	thickness: function(key, value) {
-		// if(value !== undefined)
-			// this._thickness = value
-	
-		return this.thicknessForView(this)
-	}.property('frame').cacheable(),
 
 	/**
 		Caches & returns the dragRange for a given divider view
@@ -606,7 +603,6 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 	},
 	
 	collapseDividerAtIndex: function(index, direction) {
-
 		var views = this._subViewsForDividerAtIndex(index)
 		var view = views[(direction < 0) ? 0 : 1]
 		if(!view || view.get('isCollapsed')) 
@@ -631,6 +627,10 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		this.invokeDelegateMethod(this.delegate, 'dividedViewDidUncollapseView', this, view)		
 	},
 	
+	canCollapseView: function(view) {
+		return this.invokeDelegateMethod(this.delegate, 'dividedViewCanCollapseView', this, view) || NO
+	},
+	
 	collapseView: function(view, index, direction) {
 		return this._setCollapse_forView_andDividerAtIndex_inDirection(YES, view, index, direction)
 	},
@@ -653,10 +653,6 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		this.notifyPropertyChange('thicknesses')
 
 		return true
-	},
-	
-	canCollapseView: function(view) {
-		return this.invokeDelegateMethod(this.delegate, 'dividedViewCanCollapseView', this, view)
 	}
 
 });

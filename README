@@ -35,6 +35,8 @@ views/split.js
 		
 	childView:autoresize: YES | NO
 	
+	childView:isCollapsable: YES | NO
+	
 	Example:
 	
 	split: Endash.SplitView.design({
