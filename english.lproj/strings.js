@@ -10,6 +10,6 @@
 // how your UI will look and you'll notice right away when something needs a
 // localized string added to this file!
 //
-SC.stringsFor('English', {
-  // "_String Key": "Localized String"
-}) ;
+// SC.stringsFor('English', {
+//   // "_String Key": "Localized String"
+// }) ;

@@ -22,6 +22,8 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 	dividerSpacing: 7,
 	
 	dividerThickness: 7,
+	
+	defaultViewThickness: null,
 
 	adjustThicknessesForDividerAtIndex_byOffset: function(index, offset) {
 		var ind = index;
@@ -57,7 +59,7 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 
 		for(ind = 0; ind < len; ind++) {
 			arr = (ind < index ? 0 : (ind > index ? 2 : 1)) 
-			min[arr] += this.minThicknessForView(views.objectAt(ind))
+			min[arr] += (views.objectAt(ind).get('isCollapsed') && ind < index ? 0 : this.minThicknessForView(views.objectAt(ind)))
 			max[arr] += this.maxThicknessForView(views.objectAt(ind)) || 9999
 		}
 		
@@ -70,9 +72,10 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 		return {start: minPos, length: maxPos - minPos}
 	},
 	
-	adjustThicknesses: function() {
-		if(this._adjusting || !this.get('isVisibleInWindow'))
+	_adjustThicknesses: function() {
+		if(this._adjusting)
 			return
+		
 		this._adjusting = YES
 
 		var thicknesses = this.get('thicknesses')
@@ -90,22 +93,19 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 		var i = 0
 		var isSet = []
 		var unSet = len
-		
-		if(SC.none(thicknesses)) {
-			thicknesses = views.map(function(view) {
-				return view.get('layout').width || 1
-			})
-			this.set('thicknesses', thicknesses)
-		}
-		
+				
 		for(var i = 0, len = thicknesses.get('length'); i < len; i++)
 			sum += thicknesses.objectAt(i)
 		
-		if(sum == this._sum && thickness == this._thickness)
+		if(sum == this._sum && thickness == this._thickness) {
+			this._adjusting = NO
 			return thicknesses
-				
+		}
+	
 		var dividerSpacing = this.get('dividerSpacing')
 		var dividerThicknesses = ((len - 1) * dividerSpacing)
+
+
 
 		if(sum != thickness - dividerThicknesses) {
 			isSet = thicknesses.map(function() { return false })
@@ -116,17 +116,22 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 						adjustedSum += thicknesses.objectAt(i)
 					} else {
 						
-						newThickness = Math.round(thicknesses.objectAt(i) * multiplier)
-						overflowThickness = overflow / unSet
-						overflowThickness = overflow < 0 ? Math.floor(overflowThickness) : Math.ceil(overflowThickness)
-						adjustedSum += (adjustedThickness = (views.objectAt(i).get('autoresize') === NO) ? thicknesses.objectAt(i) : this._setThickness_forView_atIndex(newThickness + overflowThickness, views.objectAt(i), i))
-					
-						if(newThickness == adjustedThickness) {
-							overflow -= overflowThickness
+						if(thicknesses.objectAt(i) == 0) {
+							isSet.replace(i, 1, [true])
 						} else {
-							overflow += newThickness - adjustedThickness
-							isSet.replace(i, 1, true)
-							--unSet
+						
+							newThickness = Math.round(thicknesses.objectAt(i) * multiplier)
+							overflowThickness = overflow / unSet
+							overflowThickness = overflow < 0 ? Math.floor(overflowThickness) : Math.ceil(overflowThickness)
+							adjustedSum += (adjustedThickness = (views.objectAt(i).get('autoresize') === NO) ? thicknesses.objectAt(i) : this._setThickness_forView_atIndex(newThickness + overflowThickness, views.objectAt(i), i))
+					
+							if(newThickness == adjustedThickness) {
+								overflow -= overflowThickness
+							} else {
+								overflow += newThickness - adjustedThickness
+								isSet.replace(i, 1, [true])
+								--unSet
+							}
 						}
 					}
 				}
@@ -138,29 +143,50 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 			} while(overflow != 0 && unSet > 0)
 		}		
 		
-		this._sum = this._thickness = thickness
-		this.updateChildLayout()
+		this._sum = (this._thickness = thickness) - dividerThicknesses
 		this._adjusting = NO
-	}.observes('thicknesses', 'frame', 'isVisibleInWindow'),
+	},
 	
 	_dragRangeForDivider: function(thumbView) {
 		var index = this.get('dividers').indexOf(thumbView) ;
-		var max = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMaxCoordinateofDividerAtIndex', this, index)
-		var min = this.invokeDelegateMethod(this.delegate, 'splitView_constrainMinCoordinateofDividerAtIndex', this, index)
+		var max = this.invokeDelegateMethod(this.delegate, 'splitViewConstrainMaxCoordinateofDividerAtIndex', this, index)
+		var min = this.invokeDelegateMethod(this.delegate, 'splitViewConstrainMinCoordinateofDividerAtIndex', this, index)
 		return {start: min, length: (max - min)}
 	},
 
 });
 
 SC.SplitView = Endash.SplitView.extend({
-	
 	init: function() {
 		var topLeftView = this.get('topLeftView')
 		var bottomRightView = this.get('bottomRightView')
+		
+		var autoresizeBehaviour = this.get('autoresizeBehavior')
+	  var defaultThickness = this.get('defaultThickness')
+	
+		var target
+		if(autoresizeBehaviour && defaultThickness) {
+			if(autoresizeBehaviour == SC.RESIZE_BOTTOM_RIGHT)
+				target = topLeftView
+			else
+				target = bottomRightView
+		
+			if(!target.prototype.layout.width)
+				target.prototype.layout.width = (defaultThickness * 100) + "%"
+		}
 		
 		this.set('childViews', [topLeftView, bottomRightView])
 		this.set('dividerSpacing', this.get('dividerThickness'))
 		
 		sc_super()
-	}
+	},
+	
+	topLeftThickness: function() {
+		return this.get('thicknesses')[0]
+  }.property('thicknesses'),
+
+	bottomRightThickness: function() {
+		return this.get('thicknesses')[1]
+  }.property('thicknesses')
+  
 })

@@ -8,6 +8,8 @@ sc_require('views/divided')
 
 /**
 	@class
+
+	This is a disaster. Do not use. 
 	
 */
 Endash.TableRowView = Endash.DividedView.extend(
@@ -25,28 +27,18 @@ Endash.TableRowView = Endash.DividedView.extend(
 	defaultView: SC.View.extend({
 		classNames: ['table-row-cell-view'],
 
-		createChildViews: function() {
+		// createChildViews: function() {
+		// 
+		// 	var childViews = []
+		// 
+		// 	var view = this.createChildView(SC.LabelView.extend({
+		// 		valueBinding: '.parentView*value',
+		// 	}))
+		// 
+		// 	childViews.push(view)
+		// 	this.set('childViews', childViews)
+		// }
 		
-			var childViews = []
-		
-			var view = this.createChildView(SC.LabelView.extend({
-				valueBinding: '.parentView*value',
-				valueBindingDefault: SC.Binding.oneWay()
-				// value: "Test"
-			}))
-		
-			childViews.push(view)
-			this.set('childViews', childViews)
-		},
-		
-		value: function() {
-			var column = this.get('column')
-			var content = this.get('parentView').get('content')
-			if(!column || !content)
-				return ""
-		
-			return content.get(column.get('contentKey'))
-		}.property('column', '.parentView.content')
 		
 	}),
 		
@@ -63,6 +55,10 @@ Endash.TableRowView = Endash.DividedView.extend(
 			this.get('dividers').push(view)
 		}
 		
+		/**
+			This is a stub cell that ensures that the row "looks complete"
+			It isn't actually tied to any column or thickness
+		*/
 		var view = this.createChildView(SC.View.extend({
 			classNames: ['table-row-cell-view']
 		}))

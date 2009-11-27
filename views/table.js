@@ -66,14 +66,19 @@ Endash.TableView = SC.View.extend({
 			dataLayout['top'] = 25
 		// }
 		
-		view = this.createChildView(SC.ScrollView.design({
+		view = this.createChildView(SC.ScrollView.extend({
+			_scroll_verticalScrollOffsetDidChange: function() {
+				// console.log(this.get('verticalScrollOffset'))
+				// console.log(this.get('contentView').get('scrollOffset'))
+				this.get('contentView').set('scrollOffset', this.get('verticalScrollOffset'))
+			},
 			borderStyle: SC.BORDER_NONE,
 			layout: dataLayout,
-			contentView: SC.ListView.extend({
-				itemViewForContentIndex: function(idx, rebuild) {
-					return arguments.callee.base.apply(this, [idx, false])
-				},
+			contentView: Endash.StaticCollectionView.extend({
+				rowHeight: 18,
 				width: null,
+				scrollOffsetBinding: '.parentView.verticalScrollOffset',
+				scrollOffsetBindingDefault: SC.Binding.oneWay(),
 				exampleView: Endash.TableRowView.extend({
 					columnsBinding: 'Table.tableColumns',
 					columnsBindingDefault: SC.Binding.multiple().oneWay(),

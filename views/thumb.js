@@ -40,7 +40,7 @@ Endash.ThumbView = SC.View.extend(
     
 		this._offset = {x: 0, y: 0}
 		
-  	this.invokeDelegateMethod(this.delegate, 'thumb_thumbViewDidBeginDrag', this, evt)
+  	this.invokeDelegateMethod(this.delegate, 'thumbViewDidBeginDrag', this, evt)
     responder.dragDidStart(this) ;
     
     this._mouseDownX = this._lastX = evt.pageX ;
@@ -55,16 +55,19 @@ Endash.ThumbView = SC.View.extend(
 		offset.x = evt.pageX - this._lastX
 		offset.y = evt.pageY - this._lastY
 		
+		if(offset.x == 500)
+			debugger
+		
 		this._lastX = evt.pageX
 		this._lastY = evt.pageY
 		
-		this.invokeDelegateMethod(this.delegate, 'thumb_thumbViewWasDragged_withOffset', this, offset, evt)
+		this.invokeDelegateMethod(this.delegate, 'thumbViewWasDragged_withOffset', this, offset, evt)
     return YES;
   },
 
 	mouseUp: function(evt) {
 		this._lastX = this._lastY = this._offset = this._mouseDownX = this.mouseDownY = null
-  	this.invokeDelegateMethod(this.delegate, 'thumb_thumbViewDidEndDrag', this, evt)
+  	this.invokeDelegateMethod(this.delegate, 'thumbViewDidEndDrag', this, evt)
 	},
     
   // doubleClick: function(evt) {
