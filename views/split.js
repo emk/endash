@@ -14,7 +14,6 @@ sc_require('mixins/thumb_delegate');
 */
 Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 /** @scope Endash.SplitView.prototype */ {
-	
 	dividerView: Endash.ThumbView.extend({
 		classNames: ['sc-split-divider-view']
 	}),
@@ -160,11 +159,10 @@ SC.SplitView = Endash.SplitView.extend({
 	init: function() {
 		var topLeftView = this.get('topLeftView')
 		var bottomRightView = this.get('bottomRightView')
-		
 		var autoresizeBehaviour = this.get('autoresizeBehavior')
-	  var defaultThickness = this.get('defaultThickness')
-	
+		var defaultThickness = this.get('defaultThickness')
 		var target
+		
 		if(autoresizeBehaviour && defaultThickness) {
 			if(autoresizeBehaviour == SC.RESIZE_BOTTOM_RIGHT)
 				target = topLeftView
@@ -172,7 +170,10 @@ SC.SplitView = Endash.SplitView.extend({
 				target = bottomRightView
 		
 			if(!target.prototype.layout.width)
-				target.prototype.layout.width = (defaultThickness * 100) + "%"
+				if(defaultThickness < 1)
+					target.prototype.layout.width = (defaultThickness * 100) + "%"
+				else
+					target.prototype.layout.width = defaultThickness
 		}
 		
 		this.set('childViews', [topLeftView, bottomRightView])

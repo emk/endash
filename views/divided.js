@@ -14,6 +14,10 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 /** @scope Endash.DividedView.prototype */ {
 
 	classNames: ['sc-divided-view'],
+	
+	render: function() {
+		debugger;
+	},
 
 	/**
 		Direction of layout.	Must be SC.LAYOUT_HORIZONTAL or SC.LAYOUT_VERTICAL.
@@ -127,6 +131,10 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		
 		return this._thicknesses
 	}.property(),
+
+	test: function() {
+		console.log("frame")
+	}.observes('frame'),
 
 	/**
 		Observer for adjusting the thicknesses and redrawing
