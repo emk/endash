@@ -6,16 +6,16 @@
 
 /** @namespace
 
-  My cool new framework.  Describe your framework.
-  
-  @extends SC.Object
+	My cool new framework.  Describe your framework.
+
+	@extends SC.Object
 */
 Endash = SC.Object.create(
-  /** @scope Endash.prototype */ {
+	/** @scope Endash.prototype */ {
 
-  NAMESPACE: 'Endash',
-  VERSION: '0.1.0',
+	NAMESPACE: 'Endash',
+	VERSION: '0.1.0',
 
-  // TODO: Add global constants or singleton objects needed by your app here.
+	// TODO: Add global constants or singleton objects needed by your app here.
 
 }) ;

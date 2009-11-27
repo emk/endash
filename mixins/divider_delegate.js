@@ -1,31 +1,20 @@
-Endash.SplitViewDelegate = {
-	isSplitViewDelegate: YES,
+Endash.DividedViewDelegate = {
 	isDividedViewDelegate: YES,
-	
-	splitViewConstrainMaxCoordinateofDividerAtIndex: function(splitView, index) {
-		return SC.maxRange(splitView.dragRangeForDividerAtIndex(index))
-	},
-	
-	splitViewConstrainMinCoordinateofDividerAtIndex: function(splitView, index) {
-		return SC.minRange(splitView.dragRangeForDividerAtIndex(index))
-	},
 	
 	dividedViewCollapseRangeForDividerAtIndex: function(dividedView, index, dragRange) {
 		var views = dividedView._subViewsForDividerAtIndex(index)
-		var minThickness;
+		var view;
 		
 		var start, end;
 		
-		if(dividedView.canCollapseView(views[0])) {
-			// minThickness = dividedView.minThicknessForView(views[0])
+		if(dividedView.canCollapseView(views[0]))
 			start = dividedView.positionForView(views[0]) + 10
-		} else
+		else
 			start = -1000
 		
-		if(dividedView.canCollapseView(views[1])) {
-			// minThickness = dividedView.minThicknessForView(views[1])
-			end = dividedView.positionForView(views[1]) + (views[1].get('isCollapsed') ? 0 : dividedView.thicknessForView(views[1])) - 10
-		} else
+		if(dividedView.canCollapseView(views[1]))
+			end = dividedView.positionForView(views[1]) + dividedView.thicknessForView(views[1]) - 10
+		else
 			end = 9999
 			
 		return {start: start, length: end - start}
