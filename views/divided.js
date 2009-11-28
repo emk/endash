@@ -15,10 +15,6 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 
 	classNames: ['sc-divided-view'],
 	
-	render: function() {
-		debugger;
-	},
-
 	/**
 		Direction of layout.	Must be SC.LAYOUT_HORIZONTAL or SC.LAYOUT_VERTICAL.
 		
