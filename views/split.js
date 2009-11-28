@@ -41,7 +41,7 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 	},
 	
 	dragRangeForDividerAtIndex: function(index) {
-		var thickness = this.thickness()
+		var thickness = this.get('thickness')
 		var subViews = this.get('subViews')
 		var offset = SC.viewportOffset(this.get('layer'))
 		var views = subViews

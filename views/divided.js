@@ -61,55 +61,115 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 
 	createChildViews: function() {
 		var views = this.get('childViews') ;
-		var numberOfViews = views.get('length') ;
-		var childCount = this.get('childCount') ;
-		var numberOfSubViews = (childCount && childCount > 2) ? childCount : ((numberOfViews > 2) ? numberOfViews : 2) ;
+		var numberOfViews = views.get('length') || 2;
 
-		var direction = this.get('layoutDirection')
+		this.set('childViews', [])
+		this.set('subViews', [])
+		this.set('dividers', [])
+		this._thicknesses = []
+		
+		for(var i = 0; i < numberOfViews; i++)
+			this.addPane(views.objectAt(i) || SC.View)
+			
+		this.set('thicknesses', this._thicknesses)
+	},
+	
+	_createDivider: function(index) {
+		var childViews = this.get('childViews')
+		var dividers = this.get('dividers')	
+		var dividerView = this.get('dividerView')
+		var view = this.createChildView(dividerView.extend({
+			delegate: this
+		}))
+		dividers.insertAt(index - 1, view)
+		if(this.get('layer'))	
+			this.insertBefore(view, childViews.objectAt(index * 2 - 1))
+		else
+			childViews.insertAt(index * 2 - 1, view)
+	},
+	
+	addPane: function(view, index, thickness) {
+		var childViews = this.get('childViews')
+		var subViews = this.get('subViews')
+		var dividers = this.get('dividers')
+		var thicknesses = this.get('thicknesses')
 		var showDividers = this.get('showDividers')
 
-		var thicknesses = []
-		var thickness = 0
+		if(SC.none(thickness))
+			thickness = this._defaultThicknessForView(view)
+			
+		if(SC.none(index))
+			index = subViews.get('length')
+
+		if(subViews.get('length') > 0 && showDividers)
+			this._createDivider(index)
 		
+		var view = this.createChildView(view.extend({
+			classNames: ['sc-split-view-pane'],
+			delegate: this
+		}))
+
+		thicknesses.insertAt(index, thickness)
+		subViews.insertAt(index, view)
 		
-		var childViews = [] ;
-		var subViews = []
-		var dividers = []
+		if(this.get('layer'))	{
+			this.insertBefore(view, subViews.objectAt(index + 1))
+			if(thickness == null || thickness.w)
+				this.__adjustThicknesses()
+			this.displayDidChange()
+		} else
+			childViews.insertAt(showDividers ? index * 2 : index, view)
+	},
+	
+	removePane: function(index) {
+		var subViews = this.get('subViews')
+		if(SC.none(index))
+			index = subViews.get('length') - 1
+		var view = subViews.objectAt(index)
+		
+		this.removeChild(view)
+		view = this.get('dividers').pop()
+		this.removeChild(view)
+		subViews.removeAt(index)
+		this.get('thicknesses').removeAt(index)
+		this.displayDidChange()
+	},
+	
+	replacePane: function(view, index) {
+		var subViews = this.get('subViews')
+		var existing = subViews.objectAt(index)
+		subviews.replace(index, 1, [view])
+		this.replaceChild(view, existing);
+		this.displayDidChange()
+	},
+	
+	movePane: function(index, offset) {
+		var views = this.get('subViews') 
+		var thicknesses = this.get('thicknesses')
+		var thickness = thickness.objectAt(index)
+		var view = views.objectAt(index)
+		var newIndex = index + offset
 
-		var dividerView = this.get('dividerView')
-
-		var view;
-		var last = false;
-
-		for(index = 0; index < numberOfSubViews; index++) {
-			last = !(index < numberOfSubViews - 1)
-
-			view = this._viewForPaneAtIndex(index)
-			thickness = (direction == SC.LAYOUT_HORIZONTAL ? view.prototype.layout.width : view.prototype.layout.height) || this._defaultThicknessForView(view)
-			view = this.createChildView(this._viewForPaneAtIndex(index))
-
-			subViews.push(view)
-			childViews.push(view) ;
-			thicknesses.push(thickness)
-
-			if(!last && showDividers) {
-				view = this.createChildView(dividerView.extend({
-					delegate: this
-				}))
-
-				dividers.push(view)
-				childViews.push(view) ;
-			} 
-		}
-
-		this.set('subViews', subViews)
-		this.set('dividers', dividers)
-		this.set('childViews', childViews)
-		this.set('thicknesses', thicknesses)
+		if(this.get('layer'))
+			this.insertBefore(view, views.objectAt(newIndex))
+		
+		views.removeAt(index, 1).insertAt(newIndex, view)
+		thicknesses.removeAt(index, 1).insertAt(newIndex, thickness)
+		this.displayDidChange()
 	},
 
 	_defaultThicknessForView: function(view) {
-		var defaultThickness = this.get('defaultViewThickness')
+		var direction = this.get('layoutDirection')
+		var layout = view.prototype.layout
+		var defaultThickness = this.get('defaultViewThickness') 
+		var thickness
+		
+		if(layout)
+			if(thickness = layout[direction == SC.LAYOUT_HORIZONTAL ? "width" : "height"])
+				return thickness
+			// else if(thickness = layout[direction == SC.LAYOUT_HORIZONTAL ? "minWidth" : "minHeight"])
+			// 	return thickness
+		
 		if(defaultThickness !== undefined)
 			return defaultThickness
 			
@@ -121,26 +181,30 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 	*/
 	thicknesses: function(key, value) {
 		if(value != undefined) {
-			this._thicknesses = value
-			this.__adjustThicknesses()
+			this.__thicknesses = value
+			this._thicknesses = null
 		}
 		
+		if(this.get('layer') && SC.none(this._thicknesses)) {
+			this._thicknesses = this.__thicknesses
+			this.__adjustThicknesses()
+		}
+			
 		return this._thicknesses
 	}.property(),
-
-	test: function() {
-		console.log("frame")
-	}.observes('frame'),
 
 	/**
 		Observer for adjusting the thicknesses and redrawing
 		the display and for frame change
 	*/
 	_displayNeedsToBeUpdated: function(object, key) {
+		if(!this.get('layer'))
+			return
+			
 		if(key != "frame" || this.get('thickness') != this._oldThickness) {
 			if(!this._oldThickness || key == "frame")
 				this._oldThickness = this.get('thickness')
-				
+			
 			this._adjustThicknesses()
 			this.updateChildLayout()
 		}
@@ -196,26 +260,6 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		}
 	},
 
-	/**
-		Returns the view for a given index (excludes divider views).
-		
-		@param {Integer} index the index to lookup.
-		@returns {SC.View}
-	*/
-	_viewForPaneAtIndex: function(index) {
-		var views = this.get('childViews') ;
- 		if(views.get('length') == 0)
-			views = []
-
-		var view = views[index] || this.get('defaultView')
-
-		view = view.extend({
-			classNames: ['sc-split-view-pane'],
-			delegate: this
-		}) ;
-
-		return view
-	},
 	
 	/**
 		Updates the child views
