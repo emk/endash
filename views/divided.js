@@ -115,7 +115,7 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 		if(this.get('layer'))	{
 			this.insertBefore(view, subViews.objectAt(index + 1))
 			if(thickness == null || thickness.w)
-				this.__adjustThicknesses()
+				this.set('thicknesses', thicknesses)
 			this.displayDidChange()
 		} else
 			childViews.insertAt(showDividers ? index * 2 : index, view)
@@ -236,18 +236,28 @@ Endash.DividedView = SC.View.extend(Endash.ThumbDelegate, Endash.DividedViewDele
 
 		var views = this.get('subViews')
 		var i, vars = 0, remaining = 0
+		var lastChar
 		
 		for(var z = 0; z < 2; z++) {
 			for(var idx = 0, len = thicknesses.get('length'); idx < len; idx++) {
 				i = thicknesses.objectAt(idx)
 				
-				if(SC.none(i)) {
+				if(SC.none(i))
 					if(z == 1)
 						i = Math.floor(remaining / vars)
 					else
 						vars++
-				} else if(i.w)
-					i = Math.floor(parseInt(i) / 100 * thickness)
+				else 
+					if(i.w)
+						if((lastChar = i.charAt(i.length - 1)) == "%")
+							i = Math.floor(parseInt(i) / 100 * thickness)
+						else
+							if(lastChar == ":")
+								if(z == 0)
+									vars += parseInt(i)
+								else
+									Math.floor((remaining / vars) * parseInt(i))
+						
 
 				if(!SC.none(i))
 					sum += this._setThickness_forView_atIndex(i, null, idx)
