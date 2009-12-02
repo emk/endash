@@ -121,8 +121,6 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 
 		if(sum != thickness - dividerThicknesses) {
 			
-			console.log(sum, thickness - dividerThicknesses, thicknesses)
-			
 			isSet = thicknesses.map(function() { return false })
 			multiplier = ((thickness - dividerThicknesses) / sum)
 			do {
