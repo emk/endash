@@ -26,18 +26,32 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 
 	adjustThicknessesForDividerAtIndex_byOffset: function(index, offset) {
 		var ind = index;
-		var diff = offset * -1
 		var views = this.get('subViews')
-		var view = ind = index
+		var view = start = ind = index
+		var view2
 		var end = offset < 0 ? -1 : views.get('length')
+		var diff
 		
-		while(diff != 0 && ind != end && views[ind]) {
-			diff = this.adjustThicknessForView_atIndex_byOffset(views[ind], ind, diff * -1)
-			ind += (start < end) ? 1 : -1
+		if( offset > 0 ) {
+			start = index + 1
+			end = views.get('length')
+			view2 = index
+			offset *= -1
+		} else {
+			start = index
+			end = 0
+			view2 = index + 1
 		}
 		
-		view++
-		this.adjustThicknessForView_atIndex_byOffset(views[view], view, (offset * -1) - diff)
+		diff = offset
+		view = ind = start
+		
+		do {
+			diff = this.adjustThicknessForView_atIndex_byOffset(views[ind], ind, diff) * -1
+			ind += (start < end) ? 1 : -1
+		} while(diff != 0 && ind != end && views[ind])
+		
+		this.adjustThicknessForView_atIndex_byOffset(views[view2], view2, offset * -1)
 	},
 	
 	dragRangeForDividerAtIndex: function(index) {
@@ -95,6 +109,8 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 		for(var i = 0, len = thicknesses.get('length'); i < len; i++)
 			sum += thicknesses.objectAt(i)
 		
+
+		
 		if(sum == this._sum && thickness == this._thickness) {
 			this._adjusting = NO
 			return thicknesses
@@ -102,8 +118,6 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 	
 		var dividerSpacing = this.get('dividerSpacing')
 		var dividerThicknesses = ((len - 1) * dividerSpacing)
-
-
 
 		if(sum != thickness - dividerThicknesses) {
 			isSet = thicknesses.map(function() { return false })
