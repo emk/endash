@@ -39,7 +39,7 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 			offset *= -1
 		} else {
 			start = index
-			end = 0
+			end = -1
 			view2 = index + 1
 		}
 		
@@ -51,7 +51,7 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 			ind += (start < end) ? 1 : -1
 		} while(diff != 0 && ind != end && views[ind])
 		
-		this.adjustThicknessForView_atIndex_byOffset(views[view2], view2, offset * -1)
+		this.adjustThicknessForView_atIndex_byOffset(views[view2], view2, offset * -1 + diff)
 	},
 	
 	dragRangeForDividerAtIndex: function(index) {
@@ -120,6 +120,9 @@ Endash.SplitView = Endash.DividedView.extend(Endash.SplitViewDelegate,
 		var dividerThicknesses = ((len - 1) * dividerSpacing)
 
 		if(sum != thickness - dividerThicknesses) {
+			
+			console.log(sum, thickness - dividerThicknesses, thicknesses)
+			
 			isSet = thicknesses.map(function() { return false })
 			multiplier = ((thickness - dividerThicknesses) / sum)
 			do {
