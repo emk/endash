@@ -55,8 +55,8 @@ Endash.ThumbView = SC.View.extend(
 		offset.x = evt.pageX - this._lastX
 		offset.y = evt.pageY - this._lastY
 		
-		if(offset.x == 500)
-			debugger
+		//if(offset.x == 500)
+		//	debugger
 		
 		this._lastX = evt.pageX
 		this._lastY = evt.pageY
